@@ -288,8 +288,20 @@ template LeftShift(shift_bound) {
     signal output y;
 
     // TODO
-}
+    signal temp;
+    temp <-- x << shift;
+    y <== temp;
 
+    component lt = LessThan(shift_bound);
+    lt.in[0] <== shift;
+    lt.in[1] <== shift_bound;
+
+    component ifElse = IfThenElse();
+    ifElse.cond <== skip_checks;
+    ifElse.L <== 1;
+    ifElse.R <== lt.out;
+    ifElse.out === 1;
+}
 /*
  * Find the Most-Significant Non-Zero Bit (MSNZB) of `in`, where `in` is assumed to be non-zero value of `b` bits.
  * Outputs the MSNZB as a one-hot vector `one_hot` of `b` bits, where `one_hot`[i] = 1 if MSNZB(`in`) = i and 0 otherwise.
