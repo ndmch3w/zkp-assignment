@@ -207,6 +207,25 @@ template RightShift(b, shift) {
     signal output y;
 
     // TODO
+    component xBits = Num2Bits(b);
+    xBits.in <== x;
+
+    signal temp[b];
+
+    for (var i=0; i<b; i++){
+        if ((i+shift) < b){
+            temp[i] <== xBits.bits[i+shift];
+        } else{
+            temp[i] <== 0;
+        }
+    }
+
+    component yNum = Bits2Num(b);
+    for (var i=0; i<b; i++){
+        yNum.bits[i] <== temp[i];
+    }
+
+    y <== yNum.out;
 }
 
 /*
