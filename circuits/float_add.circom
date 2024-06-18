@@ -316,6 +316,30 @@ template MSNZB(b) {
     signal output one_hot[b];
 
     // TODO
+    component inBits = Num2Bits(b);
+    inBits.in <== in;
+
+    // Variable to hold the one-hot representation
+    var found = 0;
+    signal temp[b];
+
+    // Iterate over each bit from the most significant bit to the least significant bit
+    for (var i = 0; i < b; i++) {
+        temp[i] <== inBits.bits[b - 1 - i] * (1 - found);
+        found += temp[i];
+        one_hot[b - 1 - i] <== temp[i];
+    }
+
+    // Ensure that the input is non-zero when skip_checks is not set
+    component isZero = IsZero();
+    isZero.in <== in;
+
+    // Conditional enforcement of the non-zero constraint
+    component ifElse = IfThenElse();
+    ifElse.cond <== skip_checks;
+    ifElse.L <== 1;
+    ifElse.R <== 1 - isZero.out;
+    ifElse.out === 1;
 }
 
 /*
