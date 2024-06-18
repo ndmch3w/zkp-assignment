@@ -300,6 +300,7 @@ template LeftShift(shift_bound) {
     ifElse.cond <== skip_checks;
     ifElse.L <== 1;
     ifElse.R <== lt.out;
+    
     ifElse.out === 1;
 }
 /*
